@@ -126,7 +126,7 @@ class App extends Component{
   editUser = (user) => {
 
     axios.put(
-        this.api_url + `admin/user/edit/${user.id}`,
+        this.api_url + `admin/user/edit`,
         user
     ).then(
         // send the user list to the dataGrid through the dialog
@@ -143,6 +143,7 @@ class App extends Component{
 
     let body = null;
     if (this.state.authorized) {
+      // body = <FullScreenDialog signOut={this.signOut} rows={this.state.rows}/>;
     }
     else if (this.state.sign_in) {
       body = <SignIn log_in={this.log_in} saveToken={this.saveToken}/>
