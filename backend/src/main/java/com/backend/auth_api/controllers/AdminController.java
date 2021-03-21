@@ -1,10 +1,13 @@
 package com.backend.auth_api.controllers;
 
 
+import com.backend.auth_api.models.User;
+import com.backend.auth_api.payload.request.SignupRequest;
+import com.backend.auth_api.payload.response.MessageResponse;
+import com.backend.auth_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,16 +28,19 @@ public class AdminController {
     PasswordEncoder encoder;
 
     @GetMapping("/user")
+    @PreAuthorize("isAuthenticated()")
     public List<User> allUsers() {
         return userRepository.findAll();
     }
 
     @GetMapping("/user/{id}")
+    @PreAuthorize("isAuthenticated()")
     public Optional<User> user(@PathVariable("id") Long id) {
         return userRepository.findById(id);
     }
 
     @PostMapping("/user/create/")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
         // username must be unique
@@ -61,6 +67,7 @@ public class AdminController {
     }
 
     @PutMapping("/user/edit/")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> editUser(@Valid @RequestBody SignupRequest signUpRequest) {
         // if the user does not exist
         if (!userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -80,10 +87,11 @@ public class AdminController {
     }
 
 
-    @DeleteMapping("/user/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Integer id) {
-        if (userRepository.existById(id)){
-            User user =  userRepository.findById(id).get();
+    @DeleteMapping("/user/delete/{username}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
+        if (userRepository.existsByEmail(username)){
+            User user =  userRepository.findByUsername(username).get();
             userRepository.delete(user);
             return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
         }

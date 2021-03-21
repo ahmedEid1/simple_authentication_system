@@ -1,5 +1,13 @@
 package com.backend.auth_api.controllers;
 
+import com.backend.auth_api.models.User;
+import com.backend.auth_api.payload.request.LoginRequest;
+import com.backend.auth_api.payload.request.SignupRequest;
+import com.backend.auth_api.payload.response.JwtResponse;
+import com.backend.auth_api.payload.response.MessageResponse;
+import com.backend.auth_api.repository.UserRepository;
+import com.backend.auth_api.security.jwt.JwtUtils;
+import com.backend.auth_api.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
