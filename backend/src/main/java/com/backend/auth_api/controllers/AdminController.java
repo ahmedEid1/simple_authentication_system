@@ -39,7 +39,7 @@ public class AdminController {
         return userRepository.findById(id);
     }
 
-    @PostMapping("/user/create/")
+    @PostMapping("/user/create")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
@@ -62,6 +62,7 @@ public class AdminController {
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
+        userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User Created successfully!"));
     }

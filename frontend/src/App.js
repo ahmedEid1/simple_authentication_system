@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import  {Grid} from "@material-ui/core";
-// import FullScreenDialog from './components/FullScreenDialog';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import SignIn from "./components/SignInForm";
 import SignUp from "./components/SingUpForm";
 import axios from "axios";
+import HomePage from "./components/HomePage";
 
 class App extends Component{
 
@@ -130,21 +130,40 @@ class App extends Component{
     )
   }
 
-  createUser = (user) => {
+  createUser = (formInput) => {
+
+    if (formInput.password !== formInput.password2) {
+      this.setState({error: "make sure that the two passwords matches"});
+      return;
+    }
+    else if (formInput.password.length < 6 || formInput.password.length > 40) {
+      this.setState({error: "the length of the password must be between 6 and 40"});
+      return;
+    }
 
     axios.post(
-        this.api_url + `admin/user/create`,
-        user
+        this.api_url + `admin/user/create/`,
+        {
+          "username": formInput.username,
+          "password": formInput.password,
+          "email": formInput.email
+        }
     ).then(
-        // send the user list to the dataGrid through the dialog
-        (res) => console.log(res)
+        (res) => {
+          this.setState({error: 'added'})
+        }
     )
+        .catch(
+            (error) => {
+              console.log(error.response.data)
+              this.setState({error: error.response.data.message})}
+        )
   }
 
   editUser = (user) => {
 
     axios.put(
-        this.api_url + `admin/user/edit`,
+        this.api_url + `admin/user/edit/`,
         user
     ).then(
         // send the user list to the dataGrid through the dialog
@@ -153,15 +172,20 @@ class App extends Component{
   }
 
   deleteUser = (id) => {
-    axios.delete(this.api_url + `admin/user/delete/${id}`)
+    axios.delete(this.api_url + `admin/user/delete/${id}/`)
         .then(res => console.log(res))
+  }
+
+  removeError = () => {
+    this.setState({error: ""})
+    console.log()
   }
 
   render() {
 
     let body = null;
     if (this.state.authorized) {
-      // body = <FullScreenDialog signOut={this.signOut} rows={this.state.rows}/>;
+      body = <HomePage createUser={this.createUser} signOut={this.signOut} rows={this.state.rows} error={this.state.error} />;
     }
     else if (this.state.sign_in) {
       body = <SignIn log_in={this.log_in} saveToken={this.saveToken} error={this.state.error}/>
