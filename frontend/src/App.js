@@ -19,43 +19,61 @@ class App extends Component{
     sign_in: false,
     // the signUp form
     sign_up: false,
+    error: ''
   }
 
   singUpThenLogIn = (formInput) => {
-    let error = '';
+
+    if (formInput.password !== formInput.password2) {
+      this.setState({error: "make sure that the two passwords matches"});
+      return;
+    }
+    else if (formInput.password.length < 6 || formInput.password.length > 40) {
+      this.setState({error: "the length of the password must be between 6 and 40"});
+      return;
+    }
 
     axios.post(this.api_url + `auth/signup`, {
       "username": formInput.username,
       "password": formInput.password,
-      "email": formInput.email,
-      "role": formInput.role
+      "email": formInput.email
     })
     .then(
         (res) => {
           this.log_in(formInput);
+          console.log(res)
+          this.setState({error: ''})
         }
     )
     .catch(
-        (res) => error = 'server'
+        (error) => {
+          console.log(error.response.data)
+          this.setState({error: error.response.data.message})}
     )
-
-    return error;
   }
 
   log_in = (formInput) => {
-    let error = '';
 
     axios.post(this.api_url + `auth/signin`, {
       "username": formInput.username,
       "password": formInput.password
     })
         .then(res => {
-          const accessToken = res.data.accessToken;
-          this.saveToken(accessToken);
-          this.authorize();
+          if (res.status === 200) {
+            const accessToken = res.data.accessToken;
+            this.saveToken(accessToken);
+            this.authorize();
+            this.setState({error: ''})
+
+          } else {
+            this.setState({error: "the user name or the password is wrong!"})
+          }
+
         }).catch(
-          (res) => error = 'server'
+          (res) => this.setState({error: "the user name or the password is wrong!"})
+
     )
+
   }
   // authorize the user
   authorize = () => {
@@ -146,10 +164,10 @@ class App extends Component{
       // body = <FullScreenDialog signOut={this.signOut} rows={this.state.rows}/>;
     }
     else if (this.state.sign_in) {
-      body = <SignIn log_in={this.log_in} saveToken={this.saveToken}/>
+      body = <SignIn log_in={this.log_in} saveToken={this.saveToken} error={this.state.error}/>
     }
     else if (this.state.sign_up) {
-      body = <SignUp sign_up={this.singUpThenLogIn} saveToken={this.saveToken}/>
+      body = <SignUp sign_up={this.singUpThenLogIn} saveToken={this.saveToken} error={this.state.error}/>
     }
     else {
       body =

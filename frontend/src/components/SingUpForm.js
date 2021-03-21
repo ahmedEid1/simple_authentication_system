@@ -44,23 +44,11 @@ const SignUp = (props) => {
         }
     );
 
-    const [error, setError] = useState({error: ''});
+    let alert = null;
 
     const handleSubmit = e => {
-
-        setError({error: ''})
-
         e.preventDefault();
-
-        if (formInput.password !== formInput.password2) {
-            setError({error: 'password'})
-        }
-        else {
-            const error = props.sign_up(formInput);
-            // display error if any
-            setError({error: error});
-        }
-
+        props.sign_up(formInput);
     };
 
     const handleInput = e => {
@@ -69,12 +57,9 @@ const SignUp = (props) => {
         setFormInput({ [name]: newValue });
     };
 
-    // handle the error (TODO : maybe its own component)
-    let alert = null;
-    if (error.error === "password")
-        alert = <Alert severity="error">please enter the same password twice.</Alert>;
-    else if (error.error === "server")
-        alert = <Alert severity="error">something went wrong with the server please try again</Alert>;
+
+    if (props.error)
+        alert = <Alert severity="error">{props.error}</Alert>;
 
     return (
 

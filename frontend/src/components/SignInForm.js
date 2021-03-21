@@ -41,15 +41,12 @@ const SignIn = (props) => {
         }
     );
 
-    const [error, setError] = useState({error: false});
 
     const handleSubmit = e => {
         // stop default behaviour
         e.preventDefault();
         // singIn
-        const error = props.log_in(formInput);
-        // display error if any
-        setError({error: error});
+        props.log_in(formInput)
     };
 
     // update username and password from the input
@@ -60,8 +57,8 @@ const SignIn = (props) => {
     };
 
     let alert = null;
-    if (error.error)
-        alert = <Alert severity="error">the username or the password is wrong, please try again</Alert>;
+    if (props.error)
+        alert = <Alert severity="error">{props.error}</Alert>;
 
     return (
         <Container component="main" maxWidth="xs">
