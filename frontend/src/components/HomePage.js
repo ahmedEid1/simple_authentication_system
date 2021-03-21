@@ -63,7 +63,7 @@ function HomePage(props) {
                         <Button autoFocus color="inherit" onClick={create_user}>
 
                         </Button>
-                        <CreateForm createUser={props.createUser} error={props.error}/>
+                        <CreateForm createUser={props.createUser} error={props.error} removeError={props.removeError}/>
                     </Toolbar>
                 </AppBar>
                 {/*<DataTable rows={props.rows}/>*/}

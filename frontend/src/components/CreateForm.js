@@ -46,23 +46,22 @@ function CreateForm(props) {
     const handleSubmit = e => {
         e.preventDefault();
         props.createUser(formInput);
-        if (props.error === 'added')
-            handleClose()
     }
 
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
-        props.createUser(formInput)
         setOpen(true);
     };
 
+    let alert = null;
+
     const handleClose = () => {
+        props.removeError();
         alert = null;
         setOpen(false);
     };
 
-    let alert = null;
     if (props.error === "added") {
         alert = <Alert severity="success">{props.error}</Alert>;
     }

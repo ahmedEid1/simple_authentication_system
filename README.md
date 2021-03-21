@@ -11,7 +11,7 @@
       - `need to autherized (send the token in the header)`
       - `send the user as Json object`
         - `{username, email, password}`
-  - PUT : /user/edit/{id}
+  - PUT : /user/edit/
     - edit an existing user
       - `need to autherized (send the token in the header)`
       - `send the user as Json object`

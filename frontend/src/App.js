@@ -178,14 +178,13 @@ class App extends Component{
 
   removeError = () => {
     this.setState({error: ""})
-    console.log()
   }
 
   render() {
 
     let body = null;
     if (this.state.authorized) {
-      body = <HomePage createUser={this.createUser} signOut={this.signOut} rows={this.state.rows} error={this.state.error} />;
+      body = <HomePage createUser={this.createUser} signOut={this.signOut} rows={this.state.rows} error={this.state.error} removeError={this.removeError} />;
     }
     else if (this.state.sign_in) {
       body = <SignIn log_in={this.log_in} saveToken={this.saveToken} error={this.state.error}/>
