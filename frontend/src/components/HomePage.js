@@ -8,8 +8,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-// import DataTable from "./DataTable";
 
+import UserTable from "./UserTable";
 import CreateForm from "./CreateForm";
 
 const useStyles = makeStyles((theme) => ({
@@ -66,7 +66,7 @@ function HomePage(props) {
                         <CreateForm createUser={props.createUser} error={props.error} removeError={props.removeError}/>
                     </Toolbar>
                 </AppBar>
-                {/*<DataTable rows={props.rows}/>*/}
+                <UserTable rows={props.users}/>
 
             </Dialog>
         </div>

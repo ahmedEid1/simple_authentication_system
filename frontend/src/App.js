@@ -40,6 +40,7 @@ class App extends Component{
     })
     .then(
         (res) => {
+          this.getAll();
           this.log_in(formInput);
           console.log(res)
           this.setState({error: ''})
@@ -77,7 +78,7 @@ class App extends Component{
   }
   // authorize the user
   authorize = () => {
-    this.setState({authorized: true, sign_in: false, sign_up: false, token: ''})
+    this.setState({authorized: true, sign_in: false, sign_up: false})
   }
   // called after singIn request to store the token
   saveToken = (token) => {
@@ -86,7 +87,7 @@ class App extends Component{
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.state.token}`
     }
-    this.getAll()
+    this.getAll();
   }
 
   api_url = 'http://127.0.0.1:8080/api/';
@@ -108,13 +109,18 @@ class App extends Component{
 
   // gets all the users if the user is loged_in and set the authorization token in the header
   getAll = () => {
+      console.log("called")
     if (this.state.token === '')
       return null;
 
-    axios.get(this.api_url + `admin/user`
+    axios.get(this.api_url + `admin/user/`
     ).then(
-        // send the user list to the dataGrid through the dialog
-        (res) => this.setState({rows: res.data})
+        (res) => {
+          this.setState({users: res.data})
+          console.log(this.state.users)
+        }
+    ).catch(
+        () => console.log("sever error")
     )
   }
 
@@ -123,7 +129,7 @@ class App extends Component{
     if (this.state.token === '')
       return null;
 
-    axios.get(this.api_url + `admin/user/${id}`
+    axios.get(this.api_url + `admin/user/${id}/`
     ).then(
         // send the user list to the dataGrid through the dialog
         (res) => console.log(res)
@@ -151,6 +157,8 @@ class App extends Component{
     ).then(
         (res) => {
           this.setState({error: 'added'})
+          this.getAll();
+          console.log(this.state.users)
         }
     )
         .catch(
@@ -167,13 +175,20 @@ class App extends Component{
         user
     ).then(
         // send the user list to the dataGrid through the dialog
-        (res) => console.log(res)
+
+        (res) => {
+          this.getAll();
+        }
     )
   }
 
   deleteUser = (id) => {
     axios.delete(this.api_url + `admin/user/delete/${id}/`)
-        .then(res => console.log(res))
+        .then(
+            res => {
+              this.getAll();
+            }
+        )
   }
 
   removeError = () => {
@@ -184,7 +199,7 @@ class App extends Component{
 
     let body = null;
     if (this.state.authorized) {
-      body = <HomePage createUser={this.createUser} signOut={this.signOut} rows={this.state.rows} error={this.state.error} removeError={this.removeError} />;
+      body = <HomePage createUser={this.createUser} signOut={this.signOut} getAll={this.getAll} users={this.state.users} error={this.state.error} removeError={this.removeError} />;
     }
     else if (this.state.sign_in) {
       body = <SignIn log_in={this.log_in} saveToken={this.saveToken} error={this.state.error}/>
