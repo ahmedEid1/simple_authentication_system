@@ -14,14 +14,11 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
-    private String username;
-
-    private String email;
-
+    private final Long id;
+    private final String username;
+    private final String email;
     @JsonIgnore
-    private String password;
+    private final String password;
 
     public UserDetailsImpl(Long id, String username, String email, String password) {
         this.id = id;
@@ -48,6 +45,7 @@ public class UserDetailsImpl implements UserDetails {
         return email;
     }
 
+    // any authenticated user can do anything
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

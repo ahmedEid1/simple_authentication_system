@@ -28,6 +28,7 @@ public class User {
     @NotBlank
     @Size(max = 120)
     private String password;
+
     public User() {
     }
 
@@ -36,6 +37,7 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
     public Long getId() {
         return id;
     }

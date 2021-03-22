@@ -14,10 +14,10 @@ import java.util.Date;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${authapi.app.jwtSecret}")
+    @Value("${jwtSecret}")
     private String jwtSecret;
 
-    @Value("${authapi.app.jwtExpirationMs}")
+    @Value("${jwtExpirationMs}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
@@ -35,6 +35,7 @@ public class JwtUtils {
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
+
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
