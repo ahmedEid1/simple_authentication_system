@@ -1,9 +1,7 @@
 package com.backend.auth_api.controllers;
 
-
 import com.backend.auth_api.models.User;
 import com.backend.auth_api.payload.request.EditRequest;
-import com.backend.auth_api.payload.request.LoginRequest;
 import com.backend.auth_api.payload.request.SignupRequest;
 import com.backend.auth_api.payload.response.MessageResponse;
 import com.backend.auth_api.repository.UserRepository;
@@ -14,20 +12,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    PasswordEncoder encoder;
+    public AdminController(UserRepository userRepository, PasswordEncoder encoder){
+        this.userRepository = userRepository;
+        this.encoder = encoder;
+    }
+
+    private boolean isNotUniqueEmail(EditRequest editRequest, User user) {
+        return (userRepository.existsByEmail(editRequest.getEmail()) && !user.getEmail().equals(editRequest.getEmail()));
+    }
+
+    private boolean isNotUniqueUsername(EditRequest editRequest, User user) {
+        return (userRepository.existsByUsername(editRequest.getUsername()) && !user.getUsername().equals(editRequest.getUsername()));
+    }
 
     @GetMapping("/user")
     @PreAuthorize("isAuthenticated()")
@@ -44,6 +51,9 @@ public class AdminController {
     @PostMapping("/user/create")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        /*
+        * maybe the create endpoint will be used by users with special permissions and give them more capability in the user creation ?_?
+        */
 
         // username must be unique
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -72,34 +82,28 @@ public class AdminController {
     @PutMapping("/user/edit/{username}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> editUser(@PathVariable("username") String username, @Valid @RequestBody EditRequest editRequest) {
-        // if the user does not exist
-
         if (userRepository.existsByUsername(username)) {
             User user = userRepository.findByUsername(username).get();
 
-            if (userRepository.existsByUsername(editRequest.getUsername()) && !user.getUsername().equals(editRequest.getUsername())) {
+            if (isNotUniqueUsername(editRequest, user))
                 return ResponseEntity
                         .badRequest()
                         .body(new MessageResponse("Error: UserName is already in use"));
-
-            }
-            else if (userRepository.existsByEmail(editRequest.getEmail()) && !user.getEmail().equals(editRequest.getEmail())) {
+            else if (isNotUniqueEmail(editRequest, user))
                 return ResponseEntity
                         .badRequest()
                         .body(new MessageResponse("Error: Email is already in use"));
-
-            }
 
             user.setUsername(editRequest.getUsername());
             user.setEmail(editRequest.getEmail());
             userRepository.save(user);
             return ResponseEntity.ok(new MessageResponse("User updated successfully!"));
 
-        } else {
+        } else
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: User does not exists"));
-        }
+
 
     }
 
