@@ -168,27 +168,31 @@ class App extends Component{
         )
   }
 
-  editUser = (user) => {
-
+  editUser = (oldName, user) => {
+    console.log(user)
     axios.put(
-        this.api_url + `admin/user/edit/`,
-        user
+        this.api_url + `admin/user/edit/${oldName}`,
+        {
+            "username": user.username,
+            "email": user.email
+        }
     ).then(
         // send the user list to the dataGrid through the dialog
-
         (res) => {
           this.getAll();
         }
+    ) .catch(
+        (error) => this.setState({error: error.response.data.message})
     )
   }
 
-  deleteUser = (id) => {
-    axios.delete(this.api_url + `admin/user/delete/${id}/`)
+  deleteUser = (username) => {
+    axios.delete(this.api_url + `admin/user/delete/${username}/`)
         .then(
             res => {
               this.getAll();
             }
-        )
+        ).catch((error) => console.log(error))
   }
 
   removeError = () => {
@@ -199,7 +203,7 @@ class App extends Component{
 
     let body = null;
     if (this.state.authorized) {
-      body = <HomePage createUser={this.createUser} signOut={this.signOut} getAll={this.getAll} users={this.state.users} error={this.state.error} removeError={this.removeError} />;
+      body = <HomePage editUser={this.editUser} deleteUser={this.deleteUser} createUser={this.createUser} signOut={this.signOut} getAll={this.getAll} users={this.state.users} error={this.state.error} removeError={this.removeError} />;
     }
     else if (this.state.sign_in) {
       body = <SignIn log_in={this.log_in} saveToken={this.saveToken} error={this.state.error}/>

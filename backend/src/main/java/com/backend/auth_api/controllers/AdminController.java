@@ -2,6 +2,8 @@ package com.backend.auth_api.controllers;
 
 
 import com.backend.auth_api.models.User;
+import com.backend.auth_api.payload.request.EditRequest;
+import com.backend.auth_api.payload.request.LoginRequest;
 import com.backend.auth_api.payload.request.SignupRequest;
 import com.backend.auth_api.payload.response.MessageResponse;
 import com.backend.auth_api.repository.UserRepository;
@@ -67,23 +69,37 @@ public class AdminController {
         return ResponseEntity.ok(new MessageResponse("User Created successfully!"));
     }
 
-    @PutMapping("/user/edit/")
+    @PutMapping("/user/edit/{username}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> editUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> editUser(@PathVariable("username") String username, @Valid @RequestBody EditRequest editRequest) {
         // if the user does not exist
-        if (!userRepository.existsByUsername(signUpRequest.getUsername())) {
+
+        if (userRepository.existsByUsername(username)) {
+            User user = userRepository.findByUsername(username).get();
+
+            if (userRepository.existsByUsername(editRequest.getUsername()) && !user.getUsername().equals(editRequest.getUsername())) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error: UserName is already in use"));
+
+            }
+            else if (userRepository.existsByEmail(editRequest.getEmail()) && !user.getEmail().equals(editRequest.getEmail())) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error: Email is already in use"));
+
+            }
+
+            user.setUsername(editRequest.getUsername());
+            user.setEmail(editRequest.getEmail());
+            userRepository.save(user);
+            return ResponseEntity.ok(new MessageResponse("User updated successfully!"));
+
+        } else {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: User does not exists"));
-        } else {
-            User user = userRepository.findByUsername(signUpRequest.getUsername()).get();
-            if (signUpRequest.getEmail() != null)
-                user.setEmail(signUpRequest.getEmail());
-
-                userRepository.save(user);
         }
-
-        return ResponseEntity.ok(new MessageResponse("User updated successfully!"));
 
     }
 
@@ -91,7 +107,7 @@ public class AdminController {
     @DeleteMapping("/user/delete/{username}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
-        if (userRepository.existsByEmail(username)){
+        if (userRepository.existsByUsername(username)){
             User user =  userRepository.findByUsername(username).get();
             userRepository.delete(user);
             return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));

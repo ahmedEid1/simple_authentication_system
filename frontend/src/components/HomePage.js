@@ -66,7 +66,7 @@ function HomePage(props) {
                         <CreateForm createUser={props.createUser} error={props.error} removeError={props.removeError}/>
                     </Toolbar>
                 </AppBar>
-                <UserTable rows={props.users}/>
+                <UserTable error={props.error} removeError={props.removeError} rows={props.users} deleteUser={props.deleteUser} editUser={props.editUser}/>
 
             </Dialog>
         </div>
