@@ -8,11 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import {makeStyles} from "@material-ui/core/styles";
-import {Checkbox} from "@material-ui/core";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Alert from "@material-ui/lab/Alert";
-
-
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -67,8 +63,6 @@ function CreateForm(props) {
     }
     else if (props.error)
         alert = <Alert severity="error">{props.error}</Alert>;
-
-
 
     return (
         <div>

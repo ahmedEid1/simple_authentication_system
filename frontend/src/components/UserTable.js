@@ -2,14 +2,8 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import DeleteForm from "./DeleteForm";
 import EditForm from "./EditForm";
-import CreateForm from "./CreateForm";
-
-
-
-
 
 function UserTable(props) {
-
     const columns = [
         {
             field: 'id', headerName: 'ID', width: 100
@@ -27,8 +21,12 @@ function UserTable(props) {
             width: 200,
             renderCell: (user) => (
                 <div>
-                    <EditForm editUser={props.editUser} user={user.row} error={props.error} removeError={props.removeError}/>
-                    <DeleteForm deleteUser={props.deleteUser} username={user.row.username}/>
+                    <EditForm editUser={props.editUser} user={user.row}
+                              error={props.error} removeError={props.removeError}
+                    />
+                    <DeleteForm deleteUser={props.deleteUser} username={user.row.username}
+                                error={props.error} removeError={props.removeError}
+                    />
                 </div>
             )
         },

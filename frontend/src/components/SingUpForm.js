@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from "react";
+import React, {useReducer} from "react";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
-import axios from "axios";
 import Alert from "@material-ui/lab/Alert";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 

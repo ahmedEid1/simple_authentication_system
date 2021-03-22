@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,11 +7,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from "@material-ui/icons/Edit";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import {Checkbox} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
-
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -32,8 +29,10 @@ function EditForm(props) {
     };
 
     const handleClose = () => {
+        // clean any errors
         props.removeError();
         setOpen(false);
+        // update to the user values
         setFormInput({username: props.user.username, email: props.user.email})
     };
 
@@ -53,8 +52,6 @@ function EditForm(props) {
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log(formInput);
-
         props.editUser(props.user.username, formInput);
     }
 
@@ -123,7 +120,8 @@ function EditForm(props) {
                     </Button>
 
                 </DialogActions>
-            </Dialog>        </div>
+            </Dialog>
+        </div>
     );
 }
 

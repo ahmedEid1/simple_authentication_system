@@ -38,10 +38,6 @@ function HomePage(props) {
         setOpen(false);
     };
 
-    const create_user = () => {
-
-    }
-
     return (
         <div>
             <Button style={{marginBottom: "10"}} variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -51,22 +47,28 @@ function HomePage(props) {
             <Button variant="outlined" color="secondary" onClick={props.signOut}>
                 Sign Out
             </Button>
+
             <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+
                 <AppBar className={classes.appBar}>
                     <Toolbar>
                         <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                             <CloseIcon />
                         </IconButton>
+
                         <Typography variant="h6" className={classes.title}>
                             Users
                         </Typography>
-                        <Button autoFocus color="inherit" onClick={create_user}>
 
-                        </Button>
                         <CreateForm createUser={props.createUser} error={props.error} removeError={props.removeError}/>
+
                     </Toolbar>
                 </AppBar>
-                <UserTable error={props.error} removeError={props.removeError} rows={props.users} deleteUser={props.deleteUser} editUser={props.editUser}/>
+
+                <UserTable error={props.error} removeError={props.removeError}
+                           rows={props.users}
+                           deleteUser={props.deleteUser} editUser={props.editUser}
+                />
 
             </Dialog>
         </div>

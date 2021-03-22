@@ -6,9 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-
-
-
+import Alert from "@material-ui/lab/Alert";
 
 function DeleteForm(props) {
 
@@ -19,12 +17,18 @@ function DeleteForm(props) {
     };
 
     const handleClose = () => {
+        // clean any errors
+        props.removeError();
         setOpen(false);
     };
 
     const handleDelete = () => {
         props.deleteUser(props.username)
     }
+
+    let alert = null;
+    if (props.error)
+        alert = <Alert severity="error">{props.error}</Alert>;
 
     return (
         <div style={{display: "inline"}}>
@@ -34,6 +38,7 @@ function DeleteForm(props) {
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Delete User</DialogTitle>
                 <DialogContent>
+                    {alert}
                     <DialogContentText>
                         <h3>Are you sure you want to delete this user?</h3>
                     </DialogContentText>
