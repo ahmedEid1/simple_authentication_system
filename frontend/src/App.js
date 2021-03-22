@@ -66,7 +66,7 @@ class App extends Component {
                 this.getAll();
             }
         ).catch(
-            (error) => this.setState({error: error.response.data.message})
+            (error) => this.setState({error: "the username or the password is wrong"})
         )
     }
 

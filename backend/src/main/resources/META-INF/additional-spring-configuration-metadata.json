@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "authapi.app.jwtSecret",
+      "type": "java.lang.String",
+      "description": "Description for authapi.app.jwtSecret."
+    },
+    {
+      "name": "authapi.app.jwtSecret",
+      "type": "java.lang.String",
+      "description": "Description for authapi.app.jwtSecret."
+    }
+  ] }
